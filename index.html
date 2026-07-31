@@ -32,14 +32,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
 .nav-links{display:flex;gap:1.4rem;font-size:.75rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;}
 .nav-links a{color:var(--muted);transition:color .2s;}
 .nav-links a:hover,.nav-links a.active{color:var(--gold);}
-.hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;}
-.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s;}
-.mobile-nav{display:none;position:fixed;inset:0;background:rgba(7,15,18,.97);z-index:999;
-  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
-.mobile-nav.open{display:flex;}
-.mobile-nav a{font-size:1.6rem;font-weight:700;color:var(--text);letter-spacing:.04em;transition:color .2s;}
-.mobile-nav a:hover{color:var(--gold);}
-.mob-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;}
+
+/* Hamburger Button & Animation */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;z-index:1001;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:transform .3s ease, opacity .3s ease;}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile Nav Overlay */
+.mobile-nav{display:flex;position:fixed;inset:0;background:rgba(7,15,18,.98);backdrop-filter:blur(20px);z-index:999;
+  flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  opacity:0;pointer-events:none;transition:opacity .3s ease, transform .3s ease;transform:translateY(-10px);}
+.mobile-nav.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.mobile-nav a{font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:.05em;transition:all .2s;}
+.mobile-nav a:hover{color:var(--gold);transform:scale(1.08);}
+.mob-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;opacity:.7;transition:opacity .2s;}
+.mob-close:hover{opacity:1;}
 @media(max-width:768px){.nav-links{display:none;}.hamburger{display:flex;}}
 
 /* ── HERO ── */
@@ -85,11 +94,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   font-weight:600;font-size:.8rem;letter-spacing:.07em;text-transform:uppercase;
   padding:.72rem 1.7rem;border-radius:5px;cursor:pointer;transition:all .2s;}
 .btn-secondary:hover{border-color:var(--teal2);color:var(--teal2);}
+
+/* Fixed Scroll Hint Link */
 .scroll-hint{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:.35rem;
-  color:var(--muted);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;}
+  color:var(--muted);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:color .2s;}
+.scroll-hint:hover{color:var(--gold);}
 .scroll-arrow{width:16px;height:16px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
-  transform:rotate(45deg);animation:bnc .9s ease infinite alternate;}
+  transform:rotate(45deg);animation:bnc .9s ease infinite alternate;transition:border-color .2s;}
+.scroll-hint:hover .scroll-arrow{border-color:var(--gold);}
 @keyframes bnc{from{transform:rotate(45deg) translateY(-2px);}to{transform:rotate(45deg) translateY(5px);}}
 
 /* ── SECTION COMMONS ── */
@@ -176,13 +190,17 @@ section{padding:4rem 1.25rem;}
 .sb{width:320px;height:130px;}
 .sl{width:150px;height:150px;}
 .sw{width:270px;height:118px;}
+.sui{width:168px;height:210px;}
+
 @media(min-width:480px){
   .sp{width:185px;height:240px;}.sc{width:185px;height:240px;}.sv{width:185px;height:240px;}
   .sb{width:400px;height:155px;}.sl{width:165px;height:165px;}.sw{width:310px;height:135px;}
+  .sui{width:192px;height:240px;}
 }
 @media(min-width:768px){
   .sp{width:210px;height:270px;}.sc{width:200px;height:260px;}.sv{width:200px;height:260px;}
   .sb{width:480px;height:175px;}.sl{width:180px;height:180px;}.sw{width:340px;height:150px;}
+  .sui{width:216px;height:270px;}
 }
 
 /* ── LEADERSHIP ── */
@@ -195,6 +213,7 @@ section{padding:4rem 1.25rem;}
 .lead-card:hover{border-left-color:var(--gold);transform:translateX(4px);}
 .lead-card h4{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.22rem;line-height:1.3;}
 .lead-card p{font-size:.76rem;color:var(--muted);}
+.lead-card .promo-note{font-size:.72rem;color:var(--gold);margin-top:4px;font-weight:500;}
 .badge-row{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem;}
 .badge{background:var(--surface);border:1px solid var(--border);color:var(--text);
   font-size:.73rem;font-weight:600;padding:.4rem .95rem;border-radius:6px;transition:all .2s;}
@@ -239,7 +258,7 @@ footer span{color:var(--gold);}
 
 <!-- Mobile nav -->
 <div class="mobile-nav" id="mob">
-  <button class="mob-close" onclick="closeMob()">✕</button>
+  <button class="mob-close" onclick="toggleMob()" aria-label="Close menu">✕</button>
   <a href="#about"      onclick="closeMob()">About</a>
   <a href="#education"  onclick="closeMob()">Education</a>
   <a href="#projects"   onclick="closeMob()">Work</a>
@@ -257,7 +276,7 @@ footer span{color:var(--gold);}
     <a href="#leadership">Activities</a>
     <a href="#contact">Contact</a>
   </div>
-  <button class="hamburger" onclick="openMob()" aria-label="Menu">
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMob()" aria-label="Toggle Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -280,7 +299,7 @@ footer span{color:var(--gold);}
     <p class="hero-roles">
       <strong>Undergraduate</strong> &nbsp;·&nbsp;
       <strong>Digital Creator</strong> &nbsp;·&nbsp;
-      <strong>Web Developer</strong>
+      <strong>UI/UX Designer &amp; Web Developer</strong>
     </p>
     <p class="hero-desc">Crafting visual identities, digital art &amp; web experiences from Sri Lanka. 5+ years of professional graphic design expertise.</p>
     <div class="hero-btns">
@@ -288,7 +307,10 @@ footer span{color:var(--gold);}
       <a href="#contact"  class="btn-secondary">Get In Touch</a>
     </div>
   </div>
-  <div class="scroll-hint"><div class="scroll-arrow"></div>scroll</div>
+  <!-- Clickable Scroll Hint -->
+  <a href="#about" class="scroll-hint" aria-label="Scroll to About">
+    <div class="scroll-arrow"></div>scroll
+  </a>
 </section>
 
 <!-- ABOUT -->
@@ -298,9 +320,10 @@ footer span{color:var(--gold);}
   <div class="about-grid">
     <div class="about-bio rl">
       <p>I'm a <strong>Physical Science undergraduate</strong> at the University of Kelaniya with a passion for design, technology, and storytelling. Over <em>5 years of professional graphic design</em> experience using Adobe Illustrator and Photoshop has sharpened my eye for detail, brand aesthetics, and visual communication.</p>
-      <p>From social media campaigns and costume graphics to vector portraits and logo systems — I bring ideas to life visually. I also build web experiences using <strong>HTML, CSS, Tailwind CSS, JavaScript, PHP &amp; MySQL</strong>.</p>
-      <p>Currently serving as <strong>Senior Editor, Digital Creator &amp; Technical Sub Head</strong> of the Chemical Society at University of Kelaniya.</p>
+      <p>From UI/UX mobile app prototypes, social media campaigns, and costume graphics to vector portraits and logo systems — I bring ideas to life visually. I also build web experiences using <strong>HTML, CSS, Tailwind CSS, JavaScript, PHP &amp; MySQL</strong>.</p>
+      <p>Currently serving as <strong>Chief Editor, Technical Head &amp; Digital Creator</strong> of the Chemical Society at University of Kelaniya <em>(promoted from Senior Editor &amp; Technical Sub Head)</em> and <strong>Vice President</strong> of the Education Subcommittee, Faculty of Science <em>(promoted from Editor)</em>.</p>
       <div class="tag-cloud">
+        <span class="tag">Figma</span><span class="tag">UI/UX Design</span>
         <span class="tag">Adobe Illustrator</span><span class="tag">Adobe Photoshop</span>
         <span class="tag">Adobe Lightroom</span><span class="tag">CapCut</span>
         <span class="tag">HTML / CSS</span><span class="tag">Tailwind CSS</span>
@@ -311,6 +334,7 @@ footer span{color:var(--gold);}
     <div class="rr">
       <div class="skills-block">
         <h4>Design Tools</h4>
+        <div class="skill-row"><div class="skill-top"><span>Figma &amp; UI/UX Design</span><span>88%</span></div><div class="skill-track"><div class="skill-fill" data-w="88"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span>Adobe Illustrator</span><span>95%</span></div><div class="skill-track"><div class="skill-fill" data-w="95"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span>Adobe Photoshop</span><span>92%</span></div><div class="skill-track"><div class="skill-fill" data-w="92"></div></div></div>
         <div class="skill-row"><div class="skill-top"><span>Adobe Lightroom</span><span>85%</span></div><div class="skill-track"><div class="skill-fill" data-w="85"></div></div></div>
@@ -344,6 +368,24 @@ footer span{color:var(--gold);}
 <section id="projects">
   <div class="sec-eyebrow reveal">Creative Portfolio</div>
   <h2 class="sec-title reveal" style="margin-bottom:2rem;">My <span>Work</span></h2>
+
+  <!-- UI/UX Designing - Smart Bus Mobile App -->
+  <div class="proj-cat reveal">
+    <div class="cat-meta">
+      <div class="cat-tool">Figma · UI/UX Design</div>
+      <div class="cat-name">Smart Bus Mobile App</div>
+    </div>
+    <div class="c-outer">
+      <div class="c-track" id="t-ui" style="animation-duration:20s;">
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover1.png" alt="Smart Bus UI Cover 1" loading="lazy"/></div>
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover2.png" alt="Smart Bus UI Cover 2" loading="lazy"/></div>
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover3.png" alt="Smart Bus UI Cover 3" loading="lazy"/></div>
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover1.png" alt="Smart Bus UI Cover 1" loading="lazy"/></div>
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover2.png" alt="Smart Bus UI Cover 2" loading="lazy"/></div>
+        <div class="c-card sui"><img src="https://raw.githubusercontent.com/TharushaDhamsara/my-website-images/a5d3649cc78875b378694984c2c588bb35f3a4c3/ui_cover3.png" alt="Smart Bus UI Cover 3" loading="lazy"/></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Social Media Posters -->
   <div class="proj-cat reveal">
@@ -453,11 +495,19 @@ footer span{color:var(--gold);}
   <div class="sec-eyebrow reveal">Campus Life</div>
   <h2 class="sec-title reveal">Leadership &amp; <span>Activities</span></h2>
   <div class="lead-grid">
+    <div class="lead-card reveal">
+      <h4>Chief Editor · Technical Head · Digital Creator</h4>
+      <p>Chemical Society, University of Kelaniya</p>
+      <div class="promo-note">▲ Promoted from Senior Editor &amp; Technical Sub Head</div>
+    </div>
+    <div class="lead-card reveal">
+      <h4>Vice President</h4>
+      <p>Education Subcommittee, Faculty of Science, University of Kelaniya</p>
+      <div class="promo-note">▲ Promoted from Editor</div>
+    </div>
     <div class="lead-card reveal"><h4>Creative Co-Leader</h4><p>AWS Student Community Day</p></div>
-    <div class="lead-card reveal"><h4>Senior Editor · Digital Creator · Technical Sub Head</h4><p>Chemical Society, University of Kelaniya</p></div>
     <div class="lead-card reveal"><h4>Junior Editor</h4><p>Mathematics Students' Society, University of Kelaniya</p></div>
     <div class="lead-card reveal"><h4>PR &amp; Marketing Coordinator</h4><p>Project "Sastheera" – Leo Club, University of Kelaniya</p></div>
-    <div class="lead-card reveal"><h4>Editor – Education Subcommittee</h4><p>Faculty of Science, University of Kelaniya</p></div>
     <div class="lead-card reveal"><h4>Editor – Organizing Committee</h4><p>Paramount Inter-faculty Quiz Competition, University of Kelaniya</p></div>
     <div class="lead-card reveal"><h4>Volunteer</h4><p>Mathematics Students' Society, University of Kelaniya</p></div>
   </div>
@@ -509,9 +559,22 @@ footer span{color:var(--gold);}
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
 <script>
-/* Mobile nav */
-function openMob(){document.getElementById('mob').classList.add('open');document.body.style.overflow='hidden';}
-function closeMob(){document.getElementById('mob').classList.remove('open');document.body.style.overflow='';}
+/* Mobile nav Toggle & Close Functions */
+function toggleMob(){
+  const mob = document.getElementById('mob');
+  const btn = document.getElementById('hamburgerBtn');
+  const isOpen = mob.classList.toggle('open');
+  btn.classList.toggle('active', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+function closeMob(){
+  const mob = document.getElementById('mob');
+  const btn = document.getElementById('hamburgerBtn');
+  mob.classList.remove('open');
+  btn.classList.remove('active');
+  document.body.style.overflow = '';
+}
 
 /* Scroll reveal */
 const allReveal=document.querySelectorAll('.reveal,.rl,.rr');
