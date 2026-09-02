@@ -176,7 +176,7 @@ section{padding:4rem 1.25rem;}
 @keyframes cslide{0%{transform:translateX(0);}100%{transform:translateX(var(--end));}}
 
 /* Cards — all images forced to exact dimensions via object-fit:cover */
-.c-card{flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--surface);position:relative;}
+.c-card{flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--surface);position:relative;cursor:pointer;}
 .c-card img{display:block;object-fit:cover;width:100%;height:100%;transition:transform .4s ease;}
 .c-card:hover img{transform:scale(1.05);}
 .c-card::after{content:'⤢';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -203,6 +203,16 @@ section{padding:4rem 1.25rem;}
   .sb{width:480px;height:175px;}.sl{width:180px;height:180px;}.sw{width:340px;height:150px;}
   .sui{width:216px;height:270px;}.scq{width:220px;height:220px;}
 }
+
+/* Image Fullscreen Modal Overlay */
+.lightbox-modal{display:flex;position:fixed;inset:0;z-index:9999;background:rgba(4,11,14,.95);backdrop-filter:blur(15px);
+  align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.lightbox-modal.open{opacity:1;pointer-events:all;}
+.lightbox-modal img{max-width:92vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.8);
+  transform:scale(.95);transition:transform .3s ease;}
+.lightbox-modal.open img{transform:scale(1);}
+.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--text);font-size:2rem;cursor:pointer;opacity:.7;transition:opacity .2s;line-height:1;}
+.lightbox-close:hover{opacity:1;color:var(--gold);}
 
 /* ── LEADERSHIP ── */
 #leadership{background:var(--bg);}
@@ -260,11 +270,11 @@ footer span{color:var(--gold);}
 <!-- Mobile nav -->
 <div class="mobile-nav" id="mob">
   <button class="mob-close" onclick="toggleMob()" aria-label="Close menu">✕</button>
-  <a href="#about"      onclick="closeMob()">About</a>
-  <a href="#education"  onclick="closeMob()">Education</a>
-  <a href="#projects"   onclick="closeMob()">Work</a>
+  <a href="#about"       onclick="closeMob()">About</a>
+  <a href="#education"   onclick="closeMob()">Education</a>
+  <a href="#projects"    onclick="closeMob()">Work</a>
   <a href="#leadership" onclick="closeMob()">Activities</a>
-  <a href="#contact"    onclick="closeMob()">Contact</a>
+  <a href="#contact"     onclick="closeMob()">Contact</a>
 </div>
 
 <!-- Nav -->
@@ -510,6 +520,12 @@ footer span{color:var(--gold);}
   </div>
 </section>
 
+<!-- FULLSCREEN LIGHTBOX MODAL -->
+<div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+  <button class="lightbox-close" aria-label="Close fullscreen view">✕</button>
+  <img id="lightboxImg" src="" alt="Full View"/>
+</div>
+
 <!-- LEADERSHIP -->
 <section id="leadership">
   <div class="sec-eyebrow reveal">Campus Life</div>
@@ -595,6 +611,29 @@ function closeMob(){
   btn.classList.remove('active');
   document.body.style.overflow = '';
 }
+
+/* Lightbox Fullscreen Functions */
+function openLightbox(src, alt){
+  const modal = document.getElementById('lightboxModal');
+  const img = document.getElementById('lightboxImg');
+  img.src = src;
+  img.alt = alt || 'Full View';
+  modal.classList.add('open');
+}
+
+function closeLightbox(){
+  const modal = document.getElementById('lightboxModal');
+  modal.classList.remove('open');
+}
+
+/* Attach Lightbox Event to Work Images */
+document.querySelectorAll('.c-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const img = card.querySelector('img');
+    if(img) openLightbox(img.src, img.alt);
+  });
+});
 
 /* Scroll reveal */
 const allReveal=document.querySelectorAll('.reveal,.rl,.rr');
